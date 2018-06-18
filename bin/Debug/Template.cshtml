@@ -1,0 +1,101 @@
+﻿@using XSD2HTML
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+   
+</head>
+<body>
+
+    <table class="wrapped confluenceTable"  >
+        <colgroup><col><col><col></colgroup>
+        <tbody>
+            <tr>
+                <th class="confluenceTh">Property</th>
+                <th class="confluenceTh">Type</th>
+                <th class="confluenceTh">Description</th>
+            </tr>
+
+            @ListNodes(Model)
+
+            @*<tr><td class="confluenceTd">Header</td><td class="confluenceTd"><span style="color: rgb(51, 153, 102);">RequestHeaderType </span><em> [M]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UUID</td><td class="confluenceTd">String <em> [O]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Country</td><td class="confluenceTd">String <em> [M]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Channel</td><td class="confluenceTd">ChannelType <em> [M]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ChannelName</td><td class="confluenceTd">String <em> [M]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ChannelReqTime</td><td class="confluenceTd">XMLGregorianCalendar <em> [O]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ChannelTrxRef</td><td class="confluenceTd">String <em> [M]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ServiceCode</td><td class="confluenceTd">String <em> [O]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HeaderExtension[]</td><td class="confluenceTd">HeaderExtentionType[] <em> [O]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FieldName</td><td class="confluenceTd">String <em> [M]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FieldValue</td><td class="confluenceTd">String <em> [M]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">RetrieveTermsAndConditionVersion</td><td class="confluenceTd">TermsAndConditionVersionReqType <em> [M]</em></td><td class="confluenceTd"><br></td></tr>
+                <tr><td class="confluenceTd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CustomerMnemonic</td><td class="confluenceTd">String <em> [M]</em></td><td class="confluenceTd"><br></td></tr>*@
+        </tbody>
+    </table>
+</body>
+</html>
+
+@helper ListNodes(SchemaNode Tag)
+{
+    <tr>
+
+        <td>
+
+        @Raw( Tag.Numbering  +" "+Tag.XmlTag)
+        </td>
+        <td>
+            @{
+                string cardinalityLegend = "";
+                if (Tag.Cardinality == Cardinality.Optional)
+                {
+                    cardinalityLegend = " O ";
+                }
+                else if (Tag.Cardinality == Cardinality.Required)
+                {
+                    cardinalityLegend = " M ";
+                }
+                else if (Tag.Cardinality == Cardinality.Repeating)
+                {
+                    cardinalityLegend = "<span style='color: rgb(51, 153, 102); '> R [" + Tag.MinOccurs + ".." + Tag.MaxOccurs + "] </span>";
+                }
+            }
+
+
+            @if (Tag is ComplexNode)
+            {
+
+
+
+
+
+                @Raw("<span>Record " + cardinalityLegend + " </span></text>")
+            }
+            else if (Tag is SimpleNode)
+            {
+                @Raw("<span>"+((SimpleNode)Tag).ElementType + cardinalityLegend + " </span></text>")
+
+              
+
+            }
+
+
+        </td>
+        <td></td>
+    </tr>
+    if (Tag is ComplexNode)
+            {
+                var lComplexNode = (ComplexNode)Tag;
+                if (lComplexNode.mChildList != null)
+                {
+                    foreach (SchemaNode item in lComplexNode.mChildList)
+                    {
+                        @ListNodes(item)
+                    }
+
+                }
+
+            }
+}
+
