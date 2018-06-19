@@ -313,11 +313,25 @@
             }
             else if (Tag is SimpleNode)
             {
+                
                 @Raw("<span>" + ((SimpleNode)Tag).ElementType + cardinalityLegend + " </span></text>")
 
             }
         </td>
-        <td></td>
+        <td>
+            @if (Tag is EnumNode)
+            {
+                <ul>
+
+                </ul>
+                foreach (string VARIABLE in ((EnumNode)Tag).EnumValues)
+                {
+
+                    
+                }
+               
+            }
+        </td>
     </tr>
     if (Tag is ComplexNode)
     {

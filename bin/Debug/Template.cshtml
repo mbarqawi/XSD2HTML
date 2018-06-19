@@ -305,7 +305,11 @@
                 {
                     @Raw("<span class='highlight-blue'>Choice " + cardinalityLegend + " </span></text>")
                 }
-                @Raw("<span>Record " + cardinalityLegend + " </span></text>")
+                else
+                {
+ @Raw("<span>Record " + cardinalityLegend + " </span></text>")
+                }
+               
             }
             else if (Tag is SimpleNode)
             {

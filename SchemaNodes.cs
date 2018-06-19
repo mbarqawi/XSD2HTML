@@ -259,7 +259,7 @@ namespace XSD2HTML
         }
     }
 
-    internal class EnumNode : SimpleNode
+    public class EnumNode : SimpleNode
     {
         private StringCollection mEnumValues;
 
