@@ -21,6 +21,7 @@ namespace XSD2HTML
 
         protected const string NSPrefixBase = "nsIFG{0}";
         private static int NextPrefixIndex = 100;
+        public string XSDType;
 
         #region Properties
 

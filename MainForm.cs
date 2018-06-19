@@ -25,20 +25,40 @@ namespace WindowsFormsApp1
 
         private void LoadXsd(String xsdPath)
         {
-            var envPath =
-                @"C:\Users\mbarIIB\Documents\FormGenrator\FormGenerator\FormGenerator\WindowsFormsApp1\wsdl\Customer\AB.Middleware.ABSPARK.Channels.Account.Inquiry.Schemas\Retrieve.Hold.Details.xsd";
+            try
+            {
+                var coll = new XmlSchemaCollection();
+                coll.Add(null, xsdPath);
+                var ElementList = new List<XmlSchemaElement>();
 
-            var coll = new XmlSchemaCollection();
-            coll.Add(null, xsdPath);
-            var ElementList = new List<XmlSchemaElement>();
+                foreach (var schemaItem in coll)
+                    foreach (XmlSchemaElement element in schemaItem.Elements.Values)
+                        ElementList.Add(element);
+                listBoxXsdEle.DataSource = ElementList;
+                listBoxXsdEle.DisplayMember = "Name";
+                this.Text = xsdPath;
+                tabControl1.SelectedIndex =0 ;
+            }
+            catch (XmlSchemaException e)
+            {
+                WriteLine(string.Format("LineNumber = {0}", e.LineNumber));
+                WriteLine(string.Format("LinePosition = {0}", e.LinePosition));
+                WriteLine(string.Format("Message = {0}", e.Message));
+                WriteLine(string.Format("File = {0}", e.SourceUri));
+                tabControl1.SelectedIndex = 1;
 
-            foreach (var schemaItem in coll)
-                foreach (XmlSchemaElement element in schemaItem.Elements.Values)
-                    ElementList.Add(element);
-            listBoxXsdEle.DataSource = ElementList;
-            listBoxXsdEle.DisplayMember = "Name";
-            this.Text = xsdPath;
+            }
+            catch (Exception e)
+            {
+                WriteLine(e.ToString());
+                tabControl1.SelectedIndex = 1;
+            }
+        }
 
+        private void WriteLine(string Message)
+        {
+            textBoxOutput.AppendText(Message);
+            textBoxOutput.AppendText(Environment.NewLine);
         }
 
         /*
@@ -52,11 +72,19 @@ namespace WindowsFormsApp1
 
             if (ct.ContentModel == null && ct.Particle != null)
             {
-                if (!(ct.Particle is XmlSchemaSequence))
+                if ((ct.Particle is XmlSchemaChoice))
                 {
-                    Debug.Assert(false, "Complex Type does not contain Sequence compositor");
+                    parent.XSDType = "Choice";
+                    var schemaBase = (XmlSchemaGroupBase)ct.Particle;
+                    if (schemaBase.Items != null)
+                        for (var i = 0; i < schemaBase.Items.Count; i++)
+                        {
+                            var particle = (XmlSchemaParticle)schemaBase.Items[i];
+                            node = ParseParticle(parent, particle);
+                        }
+
                 }
-                else
+                else if(ct.Particle is XmlSchemaSequence)
                 {
                     /*
                      * Parse each particle inside the ComplexType
@@ -264,7 +292,6 @@ namespace WindowsFormsApp1
                 SetDepth(node, parent);
             }
 
-         
             if (parent != null) ((ComplexNode)parent).AddChild(node);
 
             return node;
@@ -290,7 +317,7 @@ namespace WindowsFormsApp1
                 if (elem != null)
                 {
                     mRootNode = (ComplexNode)ParseElement(null, elem);
-            
+
                     var jsonString = JsonConvert.SerializeObject(mRootNode);
                     var errors = new StringCollection();
                     textBoxOutput.Text = jsonString;
@@ -298,7 +325,6 @@ namespace WindowsFormsApp1
                     SetNumbering(mRootNode);
 
                     RenderHtml(mRootNode);
-              
                 }
             }
 
@@ -309,13 +335,14 @@ namespace WindowsFormsApp1
                 textBoxOutput.Text = e.Message;
             }
         }
+
         //Set Numbering
         private void SetNumbering(SchemaNode mRootNode)
         {
             for (var i = 0; i < ((ComplexNode)mRootNode).mChildList.Count; i++)
             {
                 var targetNode = ((ComplexNode)mRootNode)[i];
-                targetNode.Numbering = (mRootNode.Numbering + "." + (i+1)).TrimStart('.');
+                targetNode.Numbering = (mRootNode.Numbering + "." + (i + 1)).TrimStart('.');
                 if (targetNode is ComplexNode) SetNumbering(((ComplexNode)mRootNode)[i]);
             }
         }
@@ -400,8 +427,19 @@ namespace WindowsFormsApp1
             {
                 string fileName = openFileDialog1.FileName;
                 LoadXsd(fileName);
-
             }
+        }
+
+        private void toolStripButtonCopy_Click(object sender, EventArgs e)
+        {
+            if (webBrowserHtml.Document != null)
+                if (webBrowserHtml.Document.Body != null)
+                    Clipboard.SetText(webBrowserHtml.Document.Body.InnerHtml, TextDataFormat.Html);
+        }
+
+        private void listBoxXsdEle_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            BuildSchema(null, (XmlSchemaElement)listBoxXsdEle.SelectedItem);
         }
     }
 }
