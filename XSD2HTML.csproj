@@ -77,6 +77,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="LICENSE" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -92,6 +93,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="Sample.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -100,8 +102,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cool.png" />
+    <Content Include="Capture.PNG" />
     <Content Include="HTMLPage1.html" />
+    <Content Include="Oxygen-Icons.org-Oxygen-Actions-document-edit.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
