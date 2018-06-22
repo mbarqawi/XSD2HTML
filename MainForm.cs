@@ -28,6 +28,8 @@ namespace WindowsFormsApp1
             try
             {
                 var coll = new XmlSchemaCollection();
+              
+              
                 coll.Add(null, xsdPath);
                 var ElementList = new List<XmlSchemaElement>();
 
@@ -189,7 +191,11 @@ namespace WindowsFormsApp1
             SchemaNode node = null;
             var refElem = elem;
 
-            if (elem.Name == null) refElem = (XmlSchemaElement)mSchema.Elements[elem.RefName];
+            if (elem.Name == null)
+            {
+                refElem = (XmlSchemaElement)mSchema.Elements[elem.RefName];
+
+            }
 
             var maxOccurs =
                 string.Compare(elem.MaxOccursString, "unbounded", StringComparison.Ordinal) == 0 //fx-cop correction
@@ -229,7 +235,7 @@ namespace WindowsFormsApp1
                 int minL, maxL;
                 minL = maxL = -1;
                 ArrayList enumList = null;
-
+            
                 if (sType.Content is XmlSchemaSimpleTypeRestriction)
                 {
                     var sr = (XmlSchemaSimpleTypeRestriction)sType.Content;
@@ -276,18 +282,22 @@ namespace WindowsFormsApp1
                     if (minL >= 0) simpleNode.MinLength = minL;
 
                     if (maxL >= 0) simpleNode.MaxLength = maxL;
-
+                    simpleNode.ElementType = Enum.GetName(typeof(System.Xml.Schema.XmlTypeCode), elem.ElementSchemaType.TypeCode);
                     node = simpleNode;
                 }
-
+               
                 SetDepth(node, parent);
             }
             else if (elem.ElementType is XmlSchemaDatatype)
             {
                 var simpleNode = new SimpleNode(minOccurs, maxOccurs, elem.QualifiedName.Name,
                     elem.QualifiedName.Namespace, parent);
-                simpleNode.ElementType = elem.SchemaTypeName.Name;
+                simpleNode.ElementType = Enum.GetName(typeof(System.Xml.Schema.XmlTypeCode), elem.ElementSchemaType.TypeCode);
 
+                if (simpleNode.ElementType == "")
+                {
+                    int o = 0;
+                }
                 node = simpleNode;
                 SetDepth(node, parent);
             }
@@ -316,6 +326,7 @@ namespace WindowsFormsApp1
 
                 if (elem != null)
                 {
+                    mSchema =(XmlSchema) elem.Parent;
                     mRootNode = (ComplexNode)ParseElement(null, elem);
 
                     var jsonString = JsonConvert.SerializeObject(mRootNode);

@@ -92,6 +92,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Sample.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -276,49 +276,79 @@
 
 @helper ListNodes(SchemaNode Tag)
 {
-    <tr>
+<tr>
 
+    <td>
+
+        @Raw("<sup>" + Tag.Numbering + "</sup>" + " " + Tag.XmlTag)
+    </td>
+
+    @{
+        string cardinalityLegend = "";
+        if (Tag.Cardinality == Cardinality.Optional)
+        {
+            cardinalityLegend = "<span style='color: rgb(149, 10, 95) '>  O </span>";
+        }
+        else if (Tag.Cardinality == Cardinality.Required)
+        {
+            cardinalityLegend = "<span style='color: rgb(21, 125, 11); '>  M </span>";
+        }
+        else if (Tag.Cardinality == Cardinality.Repeating)
+        {
+            string maxOcc = (Tag.MaxOccurs == -1) ? "n" : Tag.MaxOccurs.ToString();
+            cardinalityLegend = "<span style='color: rgb(11, 32, 111); '> Rep. [" + Tag.MinOccurs + ".." + maxOcc + "] </span>";
+        }
+    }
+    @if (Tag is ComplexNode)
+    {
+
+        if (Tag.XSDType == "Choice")
+
+        {
+            <td class='highlight-blue confluenceTd'>
+                @Raw("<span >Choice " + cardinalityLegend + " </span></text>")
+            </td>
+        }
+        else
+        {
+            <td>
+                @Raw("<span>Record " + cardinalityLegend + " </span></text>")
+            </td>
+        }
+
+    }
+    else if (Tag is SimpleNode)
+    {
         <td>
-
-            @Raw("<sup>" + Tag.Numbering + "</sup>" + " " + Tag.XmlTag)
-        </td>
-        <td>
-            @{
-                string cardinalityLegend = "";
-                if (Tag.Cardinality == Cardinality.Optional)
-                {
-                    cardinalityLegend = "<span style='color: rgb(149, 10, 95) '>  O </span>";
-                }
-                else if (Tag.Cardinality == Cardinality.Required)
-                {
-                    cardinalityLegend = "<span style='color: rgb(21, 125, 11); '>  M </span>";
-                }
-                else if (Tag.Cardinality == Cardinality.Repeating)
-                {
-                    cardinalityLegend = "<span style='color: rgb(11, 32, 111); '> Rep. [" + Tag.MinOccurs + ".." + Tag.MaxOccurs + "] </span>";
-                }
-            }
-            @if (Tag is ComplexNode)
+            @if (Tag is EnumNode)
             {
-             
-                if (Tag.XSDType == "Choice")
-                {
-                    @Raw("<span class='highlight-blue'>Choice " + cardinalityLegend + " </span></text>")
-                }
-                else
-                {
- @Raw("<span>Record " + cardinalityLegend + " </span></text>")
-                }
-               
-            }
-            else if (Tag is SimpleNode)
-            {
-                @Raw("<span>" + ((SimpleNode)Tag).ElementType + cardinalityLegend + " </span></text>")
+            @Raw("<span> Enum" + cardinalityLegend + " </span></text>")
 
             }
+            else
+            {
+            @Raw("<span>" + ((SimpleNode)Tag).ElementType + cardinalityLegend + " </span></text>")
+            }
+
         </td>
-        <td></td>
-    </tr>
+
+    }
+
+    <td>
+        @if (Tag is EnumNode)
+        {
+            <ul>
+
+                @foreach (string VARIABLE in ((EnumNode)Tag).EnumValues)
+                {
+
+                    <li>@VARIABLE</li>
+                }
+
+            </ul>
+        }
+    </td>
+</tr>
     if (Tag is ComplexNode)
     {
         var lComplexNode = (ComplexNode)Tag;
