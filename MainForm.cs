@@ -17,6 +17,7 @@ namespace WindowsFormsApp1
     {
         private static int mCount;
         private XmlSchema mSchema;
+        private string XSDPath;
 
         public MainForm()
         {
@@ -25,6 +26,7 @@ namespace WindowsFormsApp1
 
         private void LoadXsd(String xsdPath)
         {
+            this.XSDPath = xsdPath;
             try
             {
                 var coll = new XmlSchemaCollection();
@@ -354,7 +356,8 @@ namespace WindowsFormsApp1
             {
                 var targetNode = ((ComplexNode)mRootNode)[i];
                 targetNode.Numbering = (mRootNode.Numbering + "." + (i + 1)).TrimStart('.');
-                if (targetNode is ComplexNode) SetNumbering(((ComplexNode)mRootNode)[i]);
+                if (targetNode is ComplexNode)
+                    SetNumbering(((ComplexNode)mRootNode)[i]);
             }
         }
 
@@ -451,6 +454,11 @@ namespace WindowsFormsApp1
         private void listBoxXsdEle_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             BuildSchema(null, (XmlSchemaElement)listBoxXsdEle.SelectedItem);
+        }
+
+        private void toolStripButtonRefresh_Click(object sender, EventArgs e)
+        {
+            LoadXsd(this.XSDPath);
         }
     }
 }
