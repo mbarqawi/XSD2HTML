@@ -1,8 +1,8 @@
 # XSD2HTML
-this documantion tool that read the XSD file and genrate a HTMO page 
+this documantion tool that read the XSD file and genrate a HTML page 
  
 the output table is compatible with [confluence](https://www.atlassian.com/software/confluence)  
-you can drage the xsd file 
+you can drage the xsd file as well 
 
 ![UI](Capture.PNG)
 # ToDo:
