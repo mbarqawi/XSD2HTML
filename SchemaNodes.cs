@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace XSD2HTML
 {
@@ -36,12 +37,13 @@ namespace XSD2HTML
             get { return mMax; }
             set { mMax = value; }
         }
-
+        [JsonProperty(Order = 1)]
         public string XmlTag
         {
             get => new string('@', this.Depth * 2).Replace("@", "&nbsp;") + " " + mXmlTag;
             set { mXmlTag = value; }
         }
+        
 
         public string Attribute
         {

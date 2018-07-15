@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.textBoxOutput = new System.Windows.Forms.TextBox();
             this.webBrowserHtml = new System.Windows.Forms.WebBrowser();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControlDocumantion = new System.Windows.Forms.TabControl();
             this.tabPageDocuantion = new System.Windows.Forms.TabPage();
             this.tabPageOutputTabPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -42,12 +42,18 @@
             this.toolStripButtonGenrateHtml = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonCopy = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
-            this.tabControl1.SuspendLayout();
+            this.tabPageJsonDoc = new System.Windows.Forms.TabPage();
+            this.textBoxJsonDoc = new System.Windows.Forms.TextBox();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.tabControlDocumantion.SuspendLayout();
             this.tabPageDocuantion.SuspendLayout();
             this.tabPageOutputTabPage.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.tabPageJsonDoc.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxOutput
@@ -57,7 +63,7 @@
             this.textBoxOutput.Multiline = true;
             this.textBoxOutput.Name = "textBoxOutput";
             this.textBoxOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxOutput.Size = new System.Drawing.Size(726, 448);
+            this.textBoxOutput.Size = new System.Drawing.Size(659, 448);
             this.textBoxOutput.TabIndex = 1;
             // 
             // webBrowserHtml
@@ -69,16 +75,17 @@
             this.webBrowserHtml.Size = new System.Drawing.Size(659, 448);
             this.webBrowserHtml.TabIndex = 3;
             // 
-            // tabControl1
+            // tabControlDocumantion
             // 
-            this.tabControl1.Controls.Add(this.tabPageDocuantion);
-            this.tabControl1.Controls.Add(this.tabPageOutputTabPage);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(285, 3);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(673, 480);
-            this.tabControl1.TabIndex = 4;
+            this.tabControlDocumantion.Controls.Add(this.tabPageDocuantion);
+            this.tabControlDocumantion.Controls.Add(this.tabPageOutputTabPage);
+            this.tabControlDocumantion.Controls.Add(this.tabPageJsonDoc);
+            this.tabControlDocumantion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlDocumantion.Location = new System.Drawing.Point(285, 3);
+            this.tabControlDocumantion.Name = "tabControlDocumantion";
+            this.tabControlDocumantion.SelectedIndex = 0;
+            this.tabControlDocumantion.Size = new System.Drawing.Size(673, 480);
+            this.tabControlDocumantion.TabIndex = 4;
             // 
             // tabPageDocuantion
             // 
@@ -97,7 +104,7 @@
             this.tabPageOutputTabPage.Location = new System.Drawing.Point(4, 22);
             this.tabPageOutputTabPage.Name = "tabPageOutputTabPage";
             this.tabPageOutputTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOutputTabPage.Size = new System.Drawing.Size(732, 454);
+            this.tabPageOutputTabPage.Size = new System.Drawing.Size(665, 454);
             this.tabPageOutputTabPage.TabIndex = 1;
             this.tabPageOutputTabPage.Text = "Output";
             this.tabPageOutputTabPage.UseVisualStyleBackColor = true;
@@ -107,7 +114,7 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 282F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.tabControl1, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tabControlDocumantion, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -199,6 +206,50 @@
             this.toolStripButtonRefresh.Text = "Refresh";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
             // 
+            // tabPageJsonDoc
+            // 
+            this.tabPageJsonDoc.Controls.Add(this.toolStrip2);
+            this.tabPageJsonDoc.Controls.Add(this.textBoxJsonDoc);
+            this.tabPageJsonDoc.Location = new System.Drawing.Point(4, 22);
+            this.tabPageJsonDoc.Name = "tabPageJsonDoc";
+            this.tabPageJsonDoc.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageJsonDoc.Size = new System.Drawing.Size(665, 454);
+            this.tabPageJsonDoc.TabIndex = 2;
+            this.tabPageJsonDoc.Text = "Elements Doc";
+            this.tabPageJsonDoc.UseVisualStyleBackColor = true;
+            // 
+            // textBoxJsonDoc
+            // 
+            this.textBoxJsonDoc.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxJsonDoc.Location = new System.Drawing.Point(3, 31);
+            this.textBoxJsonDoc.Multiline = true;
+            this.textBoxJsonDoc.Name = "textBoxJsonDoc";
+            this.textBoxJsonDoc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxJsonDoc.Size = new System.Drawing.Size(662, 420);
+            this.textBoxJsonDoc.TabIndex = 2;
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton2});
+            this.toolStrip2.Location = new System.Drawing.Point(3, 3);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(659, 25);
+            this.toolStrip2.TabIndex = 3;
+            this.toolStrip2.Text = "toolStrip2";
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton2.Text = "toolStripButton2";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -212,7 +263,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
-            this.tabControl1.ResumeLayout(false);
+            this.tabControlDocumantion.ResumeLayout(false);
             this.tabPageDocuantion.ResumeLayout(false);
             this.tabPageOutputTabPage.ResumeLayout(false);
             this.tabPageOutputTabPage.PerformLayout();
@@ -221,6 +272,10 @@
             this.tableLayoutPanel2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.tabPageJsonDoc.ResumeLayout(false);
+            this.tabPageJsonDoc.PerformLayout();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -228,7 +283,7 @@
         #endregion
         private System.Windows.Forms.TextBox textBoxOutput;
         private System.Windows.Forms.WebBrowser webBrowserHtml;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl tabControlDocumantion;
         private System.Windows.Forms.TabPage tabPageDocuantion;
         private System.Windows.Forms.TabPage tabPageOutputTabPage;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
@@ -240,6 +295,10 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton toolStripButtonCopy;
         private System.Windows.Forms.ToolStripButton toolStripButtonRefresh;
+        private System.Windows.Forms.TabPage tabPageJsonDoc;
+        private System.Windows.Forms.TextBox textBoxJsonDoc;
+        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
     }
 }
 

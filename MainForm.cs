@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Schema;
+using Newtonsoft.Json.Linq;
 using XSD2HTML;
 
 namespace WindowsFormsApp1
@@ -18,6 +20,7 @@ namespace WindowsFormsApp1
         private static int mCount;
         private XmlSchema mSchema;
         private string XSDPath;
+        private SchemaNode mRootNode;
 
         public MainForm()
         {
@@ -41,7 +44,7 @@ namespace WindowsFormsApp1
                 listBoxXsdEle.DataSource = ElementList;
                 listBoxXsdEle.DisplayMember = "Name";
                 this.Text = xsdPath;
-                tabControl1.SelectedIndex =0 ;
+                tabControlDocumantion.SelectedIndex =0 ;
             }
             catch (XmlSchemaException e)
             {
@@ -49,13 +52,13 @@ namespace WindowsFormsApp1
                 WriteLine(string.Format("LinePosition = {0}", e.LinePosition));
                 WriteLine(string.Format("Message = {0}", e.Message));
                 WriteLine(string.Format("File = {0}", e.SourceUri));
-                tabControl1.SelectedIndex = 1;
+                tabControlDocumantion.SelectedIndex = 1;
 
             }
             catch (Exception e)
             {
                 WriteLine(e.ToString());
-                tabControl1.SelectedIndex = 1;
+                tabControlDocumantion.SelectedIndex = 1;
             }
         }
 
@@ -65,10 +68,7 @@ namespace WindowsFormsApp1
             textBoxOutput.AppendText(Environment.NewLine);
         }
 
-        /*
-* Used to parse a complex type
-*/
-
+ 
         private SchemaNode ParseComplexType(SchemaNode parent,
             XmlSchemaComplexType ct)
         {
@@ -109,7 +109,7 @@ namespace WindowsFormsApp1
         private SchemaNode ParseParticle(SchemaNode parent, XmlSchemaParticle pa)
         {
             SchemaNode node = null;
-            //DCR #100598 - Increment control count for every element.
+            
             mCount++;
             if (pa is XmlSchemaElement)
             {
@@ -205,9 +205,7 @@ namespace WindowsFormsApp1
                     : (int)elem.MaxOccurs;
             var minOccurs = (int)elem.MinOccurs;
 
-            /* Bug #89824 - MX Messages contain complex nodes having attribute nodes as child nodes.
-             * For that, find attribute of each complex node, if it is not null, create a separate control
-             * for the attribute node.*/
+        
 
             string attribute = null;
             if (elem.ElementType is XmlSchemaComplexType)
@@ -309,11 +307,11 @@ namespace WindowsFormsApp1
             return node;
         }
 
-        private void BuildSchema(Hashtable nsPrefixTable, XmlSchemaElement elem)
+        private void BuildSchema(Hashtable nsPrefixTable, XmlSchemaElement elem, string JsonDoc)
         {
             try
             {
-                SchemaNode mRootNode;
+               
 
                 if (elem == null)
                 {
@@ -335,8 +333,14 @@ namespace WindowsFormsApp1
                     var errors = new StringCollection();
                     textBoxOutput.Text = jsonString;
 
-                    SetNumbering(mRootNode);
+                    var XSDJsonObj = JObject.Parse(jsonString);
+                   // cleanJson(XSDJsonObj);
 
+                    SetNumbering(mRootNode);
+                    if (!string.IsNullOrWhiteSpace( JsonDoc))
+                    {
+                        
+                    }
                     RenderHtml(mRootNode);
                 }
             }
@@ -347,6 +351,45 @@ namespace WindowsFormsApp1
                 Console.WriteLine(e.ToString());
                 textBoxOutput.Text = e.Message;
             }
+        }
+
+        private void cleanJson(JObject xsdJsonObj)
+        {
+            var properties = xsdJsonObj.Properties();
+
+            foreach (var jproperty in properties.ToArray())
+            {
+                if (jproperty.Name == "XmlTag")
+                {
+                   
+                    var cleanName= xsdJsonObj.Property(jproperty.Name).Value.ToString().Replace("&nbsp;","").Trim();
+                    xsdJsonObj.Property(jproperty.Name).Remove();
+                    xsdJsonObj.AddFirst(new JProperty("XmlTag",cleanName));
+
+
+                    //xsdJsonObj.Property(jproperty.Name).Value =
+                    //    xsdJsonObj.Property(jproperty.Name).Value.ToString().Replace("&nbsp;","").Trim();
+                    
+
+                }
+                else if (jproperty.Name == "mChildList")
+                {
+                    foreach (var VARIABLE in ((Newtonsoft.Json.Linq.JArray) (xsdJsonObj.Property("mChildList").Value)))
+                    {
+                        cleanJson((JObject) VARIABLE);
+                    }
+
+                }
+                else
+                {
+                    xsdJsonObj.Property(jproperty.Name).Remove();
+                }
+                
+            }
+
+
+
+
         }
 
         //Set Numbering
@@ -384,10 +427,7 @@ namespace WindowsFormsApp1
         {
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            BuildSchema(null, (XmlSchemaElement)listBoxXsdEle.SelectedItem);
-        }
+      
 
         private void MainForm_DragDrop(object sender, DragEventArgs e)
         {
@@ -425,7 +465,7 @@ namespace WindowsFormsApp1
 
         private void toolStripButtonGenrateHtml_Click(object sender, EventArgs e)
         {
-            BuildSchema(null, (XmlSchemaElement)listBoxXsdEle.SelectedItem);
+            BuildSchema(null, (XmlSchemaElement)listBoxXsdEle.SelectedItem,"");
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -453,12 +493,23 @@ namespace WindowsFormsApp1
 
         private void listBoxXsdEle_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            BuildSchema(null, (XmlSchemaElement)listBoxXsdEle.SelectedItem);
+            BuildSchema(null, (XmlSchemaElement)listBoxXsdEle.SelectedItem,"");
         }
 
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             LoadXsd(this.XSDPath);
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            var jsonString = JsonConvert.SerializeObject(mRootNode);
+            var errors = new StringCollection();
+            textBoxOutput.Text = jsonString;
+
+            var XSDJsonObj = JObject.Parse(jsonString);
+            cleanJson(XSDJsonObj);
+            textBoxJsonDoc.Text = XSDJsonObj.ToString();
         }
     }
 }
